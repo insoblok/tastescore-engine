@@ -10,10 +10,12 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@adobe/react-spectrum": "^3.43.0",
         "@react-aria/accordion": "^3.0.0-alpha.37",
         "@react-stately/collections": "^3.12.6",
         "@tailwindcss/vite": "^4.1.11",
         "axios": "^1.11.0",
+        "classnames": "^2.5.1",
         "lucide-react": "^0.539.0",
         "react": "^19.1.1",
         "react-data-table-component": "^7.7.0",

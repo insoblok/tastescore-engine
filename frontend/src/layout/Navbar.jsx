@@ -2,7 +2,7 @@ import { Search, Settings, User } from "lucide-react";
 import apiClient from "../api/client";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
 export default function Navbar() {
 	const [search, setSearch] = useState("");
 	const navigate = useNavigate();
@@ -10,6 +10,10 @@ export default function Navbar() {
 	const handleSearch = async (e) => {
 		e.preventDefault();
 		e.stopPropagation();
+		if (!search) {
+			toast.warning("Please enter the wallet address!");
+			return;
+		}
 		try {
 			const response = await apiClient.get(`/explore?wallet=${search}`);
 			if (response.status != 200) {
@@ -17,8 +21,13 @@ export default function Navbar() {
 			}
 			let target, summary;
 			try {
+        if (response.data.status_code == 400) {
+          toast.warning("Please enter a valid wallet address");
+          return;
+        }
 				let data = JSON.parse(response.data.data.histories);
-				if (response.data.data.summary) summary = JSON.parse(response.data.data.summary);
+				if (response.data.data.summary)
+					summary = JSON.parse(response.data.data.summary);
 				if (data.token == "BTC") target = "/btc-transactions";
 				else if (data.token == "ETH") target = "/eth-transactions";
 
@@ -27,9 +36,11 @@ export default function Navbar() {
 				});
 			} catch (error) {
 				console.log("Exception raised while parsing response: ", error);
+        toast.error("Failed to parse the response data.")
 			}
 		} catch (err) {
 			console.log(err);
+      toast.error("Unexpected error! Please try again with valid wallet address.")
 			return;
 		}
 	};

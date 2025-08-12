@@ -10,7 +10,6 @@ export default function ETHTransactions() {
 	const wallet = location.state.wallet;
 	const summary = location.state.summary;
 
-	console.log(summary)
 	return (
 		<>
 			<Navbar />

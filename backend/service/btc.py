@@ -46,9 +46,7 @@ class BitcoinScan:
         tx_dtos: List[TxDTO] = []
 
         for tx in data['txs']:
-            self._process_transaction_inputs(tx, srcs)
-            self._process_transaction_outputs(tx, dsts)
-            tx_dtos.append(self._create_transaction_dto(tx, srcs, dsts))
+            tx_dtos.append(self._create_transaction_dto(tx))
 
         return AddressDTO(
             hash160=data['hash160'],
@@ -61,19 +59,7 @@ class BitcoinScan:
             txs=tx_dtos
         ).model_dump_json()
 
-    def _process_transaction_inputs(self, tx: dict, srcs: Set[str]) -> None:
-        """Extract source addresses from transaction inputs."""
-        for inp in tx.get("inputs", []):
-            if "prev_out" in inp and "addr" in inp["prev_out"]:
-                srcs.add(inp["prev_out"]["addr"])
-
-    def _process_transaction_outputs(self, tx: dict, dsts: Set[str]) -> None:
-        """Extract destination addresses from transaction outputs."""
-        for out in tx.get("out", []):
-            if "addr" in out:
-                dsts.add(out["addr"])
-
-    def _create_transaction_dto(self, tx: dict, srcs: Set[str], dsts: Set[str]) -> TxDTO:
+    def _create_transaction_dto(self, tx: dict) -> TxDTO:
         """Create TxDTO from transaction data."""
         return TxDTO(
             balance=tx["balance"] / self.SATOSHI_TO_BITCOIN,
@@ -81,8 +67,8 @@ class BitcoinScan:
             time=tx["time"],
             hash=tx["hash"],
             fee=tx["fee"],
-            inputs=srcs,
-            outputs=dsts
+            inputs=tx.get("inputs", []),
+            outputs=tx.get("out", [])
         )
 
     def validate_btc_address_format(self, wallet_addr: str) -> bool:

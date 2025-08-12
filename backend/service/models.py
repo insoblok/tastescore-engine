@@ -58,8 +58,8 @@ class TxDTO(BaseModel):
     time: int
     hash: str
     fee: int
-    inputs: set[str]
-    outputs: set[str]
+    inputs: List[Input]
+    outputs: List[Out]
 
 class Address(BaseModel):
     """Bitcoin address data structure"""

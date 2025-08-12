@@ -6,7 +6,6 @@ import {
 import DataTable from "react-data-table-component";
 
 export default function ETHTransactionView({ transactions, wallet }) {
-	console.log(transactions);
 	const checkDepositOrTransfer = (src, wlt) => {
 		return src.toLowerCase() == wlt.toLowerCase() ? "Transfer" : "Deposit";
 	};

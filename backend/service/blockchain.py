@@ -8,7 +8,7 @@ SATOSHI_TO_BITCOIN = 100000000
 class BlockchainClient:
     """Python implementation of the Go Blockchain client"""
     def __init__(self):
-        print("")
+        print("Initialized")
         
     def check_wallet_network(self, wallet_addr: str) -> int:
         if len(wallet_addr) == 42 and wallet_addr.startswith("0x"):

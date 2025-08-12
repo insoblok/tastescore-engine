@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import JSONResponse
 from service.blockchain import BlockchainClient
@@ -14,7 +15,6 @@ def get_info(request: Request):
     if not wallet:
         raise HTTPException(status_code=400, detail="Wallet address must be entered.")
     network = BlockchainClient().check_wallet_network(wallet)
-    print(f"network is {network}")
     result = {}
     if (network == 0):
         eScan = EthereumScan()
@@ -22,9 +22,11 @@ def get_info(request: Request):
         histories = eScan.get_eth_address(wallet)
         result["histories"] = histories
         result["summary"] = summary
-        print(result)
     elif (network == 1):
         bScan = BitcoinScan()
         histories = bScan.get_address(wallet)
         result["histories"] = histories
+    
+    if(result.get("histories") is None):
+        return HTTPException(status_code=400, detail="Not a valid address.")
     return JSONResponse(content={"success": True, "data": result}, status_code=200)        

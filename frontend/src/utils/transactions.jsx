@@ -8,7 +8,7 @@ export function HashComponent ({ original, after }) {
 			<button
 				title="Copy address"
 				className="p-2 mx-1 hover:bg-blue-200 text-gray rounded-full flex items-center justify-center text-slate-500"
-				onClick={() =>{ handleClickCopyClipboard(original)}}
+				onClick={e =>{ handleClickCopyClipboard(original, e)}}
 			>
 			<FaCopy size={12} />
 			</button>
@@ -29,7 +29,8 @@ export const getFormattedDateTimeString = (sec) => {
 	return new Date(sec * 1000).toLocaleString();
 };
 
-export const handleClickCopyClipboard = (text) => {
+export const handleClickCopyClipboard = (text, event) => {
+  event.stopPropagation();
 	navigator.clipboard.writeText(text)
 	.then(() => {
 		toast.success("Copied to Clipboard");
