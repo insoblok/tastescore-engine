@@ -1,9 +1,10 @@
-from asyncio.windows_events import NULL
+from typing import Optional
+NULL: Optional[None] = None
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import JSONResponse
 from service.blockchain import BlockchainClient
-from service.btc import BitcoinScan
-from service.eth import EthereumScan
+from service.btc.btc import BitcoinScan
+from service.eth.eth import EthereumScan
 
 router = APIRouter(prefix="/api/explore")
 

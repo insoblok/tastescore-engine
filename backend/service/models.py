@@ -1,34 +1,34 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
 class PrevOut(BaseModel):
     """Previous output data structure"""
-    spent: bool
-    tx_index: int
-    type: int
-    addr: str
-    value: int
-    n: int
-    script: str
+    spent: Optional[bool] = False
+    tx_index: Optional[int] = 0
+    type: Optional[int] = 0
+    addr: Optional[str] = ""
+    value: Optional[int] = 0
+    n: Optional[int] = 0
+    script: Optional[str] = ""
 
 class Input(BaseModel):
     """Transaction input data structure"""
-    sequence: int
-    script: str
+    sequence: Optional[int] = 0
+    script: Optional[str] = ""
     prev_out: PrevOut
-    witness: str
-    index: int
+    witness: Optional[str] = ""
+    index: Optional[int] = 0
 
 class Out(BaseModel):
     """Transaction output data structure"""
-    spent: bool
-    tx_index: int
-    type: int
-    addr: str
-    value: int
-    n: int
-    script: str
+    spent: Optional[bool] = False
+    tx_index: Optional[int] = 0
+    type: Optional[int] = 0
+    addr: Optional[str] = ""
+    value: Optional[int] = 0
+    n: Optional[int] = 0
+    script: Optional[str] = ""
 
 class Tx(BaseModel):
     """Bitcoin transaction data structure"""
@@ -73,14 +73,14 @@ class Address(BaseModel):
 
 class AddressDTO(BaseModel):
     """Bitcoin address data structure"""
-    hash160: str
-    token: str
-    address: str
-    n_tx: int
-    total_received: int
-    total_sent: int
-    final_balance: float
-    txs: List[TxDTO]
+    hash160: Optional[str] = ""
+    token: Optional[str] = ""
+    address: Optional[str] = ""
+    n_tx: Optional[int] = 0
+    total_received: Optional[int] = 0
+    total_sent: Optional[int] = 0
+    final_balance: Optional[float] = 0
+    txs: Optional[List[TxDTO]]=[]
 
 
 
@@ -89,8 +89,8 @@ class ETHAddressSummary(BaseModel):
     hash: str
     nonce: str
     balance: float
-    transactionCount: str
-    internalTransactionCount: str
+    transactionCount: int
+    internalTransactionCount: int
     totalSent: float
     totalReceived: float
     totalFees: float
@@ -122,7 +122,7 @@ class ETHAddressDTO(BaseModel):
     success: bool
     state: str
     time: int
-    blockNumber: int
+    blockNumber: str
     src: str
     dst: str
     amount: float

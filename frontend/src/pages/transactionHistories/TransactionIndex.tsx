@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "../../layout/Navbar";
 
-export default function TransactionIndex() {
+export default function TransactionIndex(): React.ReactElement  {
 	return (
 		<>
 			<Navbar />

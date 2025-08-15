@@ -1,15 +1,14 @@
 import requests
 from typing import List
-from .models import ETHAddress, ETHAddressDTO, ETHResponse, ETHAddressSummary
-from .utils import Utils
-
+from ..models import ETHAddress, ETHAddressDTO, ETHResponse, ETHAddressSummary
+from ..utils import Utils
+from service.constants import ETHER_IN_WEI
 
 class EthereumScan:
     """Service for interacting with Ethereum blockchain APIs."""
 
     PAGE_SIZE = 20
     PAGE_NO = 0
-    ETHER_IN_WEI = 10 ** 18
 
     def __init__(self) -> None:
         self.api = "https://api.blockchain.info"
@@ -75,15 +74,15 @@ class EthereumScan:
     def _create_transaction_dto(self, transaction: dict) -> ETHAddressDTO:
         """Create ETHAddressDTO from transaction data."""
         return ETHAddressDTO(
-            hash=transaction["hash"],
-            success=transaction["success"],
-            state=transaction["state"],
-            time=transaction["timestamp"],
-            blockNumber=transaction["blockNumber"],
-            src=transaction["from"],
-            dst=transaction["to"],
-            amount=float(transaction["value"]) / self.ETHER_IN_WEI,
-            fee=float(transaction["gasUsed"]) / self.ETHER_IN_WEI
+            hash=transaction.get("hash", ""),
+            success=transaction.get("success", False),
+            state=transaction.get("state", ""),
+            time=transaction.get("timestamp", 0),
+            blockNumber=transaction.get("blockNumber", ""),
+            src=transaction.get("from", ""),
+            dst=transaction.get("to", ""),
+            amount=float(transaction.get("value", "0")) / ETHER_IN_WEI,
+            fee=float(transaction.get("gasUsed", "0")) / ETHER_IN_WEI
         )
 
     def _build_eth_response(self, response: dict, transactions: List[ETHAddressDTO]) -> ETHResponse:
@@ -91,21 +90,21 @@ class EthereumScan:
         return ETHResponse(
             transactions=transactions,
             token="ETH",
-            page=response['page'],
-            size=response['size']
+            page=response.get('page', 0),
+            size=response.get('size', 10)
         ).model_dump_json()
 
     def _parse_summary_data(self, data: dict) -> ETHAddressSummary:
         """Parse raw summary data into ETHAddressSummary object."""
         return ETHAddressSummary(
-            hash=data['hash'],
-            nonce=data['nonce'],
-            balance=float(data['balance']) / self.ETHER_IN_WEI,
-            transactionCount=data['transactionCount'],
-            internalTransactionCount=data['internalTransactionCount'],
-            totalSent=float(data['totalSent']) / self.ETHER_IN_WEI,
-            totalReceived=float(data['totalReceived']) / self.ETHER_IN_WEI,
-            totalFees=float(data['totalFees']) / self.ETHER_IN_WEI,
-            lastUpdatedAtNumber=data['lastUpdatedAtNumber'],
-            tokenTransferCount=data['tokenTransferCount']
+            hash=data.get('hash', ""),
+            nonce=data.get('nonce', ""),
+            balance=float(data.get('balance', 0)) / ETHER_IN_WEI,
+            transactionCount=int(data.get('transactionCount', 0)),
+            internalTransactionCount=int(data.get('internalTransactionCount', 0)),
+            totalSent=float(data.get('totalSent', 0)) / ETHER_IN_WEI,
+            totalReceived=float(data.get('totalReceived', 0)) / ETHER_IN_WEI,
+            totalFees=float(data.get('totalFees', 0)) / ETHER_IN_WEI,
+            lastUpdatedAtNumber=data.get('lastUpdatedAtNumber', ''),
+            tokenTransferCount=data.get('tokenTransferCount', '')
         ).model_dump_json()

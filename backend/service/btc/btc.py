@@ -1,17 +1,20 @@
 import requests
-from typing import List, Set
-from .models import Address, AddressDTO, Tx, TxDTO
-from .utils import Utils
+from typing import List
+from ..models import Address, AddressDTO, TxDTO
+from dotenv import load_dotenv
+from ..utils import Utils
+import os
+from service.constants import SATOSHI_TO_BITCOIN
 
+load_dotenv()
 
 class BitcoinScan:
     """Service for interacting with Bitcoin blockchain APIs."""
     
-    SATOSHI_TO_BITCOIN = 100000000
 
     def __init__(self) -> None:
-        self.info_api = "https://blockchain.info"
-        self.price_api = "https://blockchain.info/ticker"
+        self.info_api = os.getenv("BTC_INFO_URL")
+        self.price_api = os.getenv("BTC_PRICE_URL")
 
     def get_address(self, btc_address: str) -> Address:
         """
@@ -30,7 +33,6 @@ class BitcoinScan:
             raise ValueError("Invalid Bitcoin address format")
 
         url = f"{self.info_api}/address/{btc_address}?format=json"
-
         try:
             data = Utils().load_response(url)
             return self._parse_address_data(data)
@@ -41,32 +43,30 @@ class BitcoinScan:
 
     def _parse_address_data(self, data: dict) -> Address:
         """Parse raw API response into AddressDTO object."""
-        srcs: Set[str] = set()
-        dsts: Set[str] = set()
         tx_dtos: List[TxDTO] = []
 
         for tx in data['txs']:
             tx_dtos.append(self._create_transaction_dto(tx))
 
         return AddressDTO(
-            hash160=data['hash160'],
+            hash160=data.get('hash160', ''),
             token="BTC",
-            address=data['address'],
-            n_tx=data['n_tx'],
-            total_received=data['total_received'],
-            total_sent=data['total_sent'],
-            final_balance=float(data['final_balance']) / self.SATOSHI_TO_BITCOIN,
+            address=data.get('address', ''),
+            n_tx=int(data.get('n_tx', 0)),
+            total_received=int(data.get('total_received', 0)),
+            total_sent=int(data.get('total_sent', 0)),
+            final_balance=float(data.get('final_balance', 0)) / SATOSHI_TO_BITCOIN,
             txs=tx_dtos
         ).model_dump_json()
 
     def _create_transaction_dto(self, tx: dict) -> TxDTO:
         """Create TxDTO from transaction data."""
         return TxDTO(
-            balance=tx["balance"] / self.SATOSHI_TO_BITCOIN,
-            result=float(tx["result"]) / self.SATOSHI_TO_BITCOIN,
-            time=tx["time"],
-            hash=tx["hash"],
-            fee=tx["fee"],
+            balance=float(tx.get("balance", 0.0)) / SATOSHI_TO_BITCOIN,
+            result=float(tx.get("result", 0.0)) / SATOSHI_TO_BITCOIN,
+            time=int(tx.get("time", 0)),
+            hash=tx.get("hash", ""),
+            fee=int(tx.get("fee", 0)),
             inputs=tx.get("inputs", []),
             outputs=tx.get("out", [])
         )
