@@ -50,3 +50,4 @@ pytestdebug.log
 
 # --- Optional: Jupyter Notebooks ---
 .ipynb_checkpoints
+frontend/src/components
