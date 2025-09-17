@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+*.swp
+.env
+.venv
+venv/
+*.pem
+*.key
+.git/
+.gitignore

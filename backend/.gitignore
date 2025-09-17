@@ -1,0 +1,53 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+.eggs/
+dist/
+build/
+pip-wheel-metadata/
+*.manifest
+*.spec
+
+# --- Virtual Environments ---
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+
+# --- FastAPI Specific ---
+# Uvicorn/Hypercorn logs
+*.log
+
+# --- Environment variables ---
+.env
+
+
+# --- IDE & OS ---
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- Test / Coverage ---
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+.tox/
+.mypy_cache/
+.cache/
+pytestdebug.log
+
+# --- Optional: Jupyter Notebooks ---
+.ipynb_checkpoints
+frontend/src/components
