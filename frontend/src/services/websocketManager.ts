@@ -42,7 +42,7 @@ class WebSocketConnection {
 }
 
 class WebSocketManager {
-  private connections: Map<string, WebSocketConnection> = new Map();
+  public connections: Map<string, WebSocketConnection> = new Map();
 
   connectAll(urls: string[]) {
     urls.forEach((url) => {
@@ -55,6 +55,8 @@ class WebSocketManager {
   get(url: string) {
     return this.connections.get(url) || null;
   }
+
 }
 
 export const websocketManager = new WebSocketManager();
+export default WebSocketConnection;

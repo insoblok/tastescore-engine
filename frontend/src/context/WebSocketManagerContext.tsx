@@ -9,12 +9,12 @@ export const WebSocketManagerProvider: React.FC<{ children: React.ReactNode }> =
     // Connect to all servers at app start
     
 
-    websocketManager.connectAll([
-      BTC_SOCKET_URL,
-      ETH_SOCKET_URL,
-      BNB_SOCKET_URL,
-      SOL_SOCKET_URL,
-    ]);
+    // websocketManager.connectAll([
+    //   BTC_SOCKET_URL,
+    //   ETH_SOCKET_URL,
+    //   BNB_SOCKET_URL,
+    //   SOL_SOCKET_URL,
+    // ]);
   }, []);
 
   return (

@@ -12,10 +12,13 @@ class Utils:
     def __init__(self):
         self.session = requests.session()
     
-    def load_response(self, path: str):
+    def load_response(self, path: str, method="get", params={}):
         """Load response from Blockchain.info API"""
         try:
-            response = self.session.get(path)
+            if method == "get":
+                response = self.session.get(path)
+            elif method == "post":
+                response = self.session.post(path, json=params);
             response.raise_for_status()
             
             data = response.json()

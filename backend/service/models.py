@@ -134,3 +134,55 @@ class ETHResponse(BaseModel):
     token: str
     page: str
     size: int
+
+class BNBTransactionDTO(BaseModel):
+    blockNumber: Optional[str] = ""
+    blockHash: Optional[str] = ""
+    time: Optional[str] = ""
+    hash: Optional[str] = ""
+    transactionIndex: Optional[str] = ""
+    src: Optional[str] = ""
+    dst: Optional[str] = ""
+    value: Optional[str] = ""
+    gas: Optional[str] = ""
+    gasPrice: Optional[str] = ""
+    input: Optional[str] = ""
+    contractAddress: Optional[str] = ""
+    gasUsed: Optional[str] = ""
+    isError: Optional[str] = ""
+    
+    
+    
+class SOLTransfer(BaseModel):
+    fromUserAccount: str
+    toUserAccount: str
+    amount: float
+    
+class SOLTransactionDTO(BaseModel):
+    """Data transfer object for Solana transactions."""
+    description: str
+    direction: str
+    type: str
+    source: str
+    fee: int
+    feePayer: str
+    signature: str
+    slot: float
+    timestamp: float
+    nativeTransfers: List[SOLTransfer]
+class SOLResponse(BaseModel):
+    """Response model for Solana address transactions."""
+    transactions: List[SOLTransactionDTO]
+    token: str
+    page: int
+    size: int
+
+class SOLAddressSummary(BaseModel):
+    """Summary model for Solana address."""
+    address: str
+    price: float
+    balance: float
+    balanceLamports: int
+    transactionCount: int
+    executable: bool
+    owner: str

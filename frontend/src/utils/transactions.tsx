@@ -1,7 +1,8 @@
 import { toast } from "react-toastify";
 import { FaCopy } from "react-icons/fa";
 import { ReactElement, MouseEvent } from "react";
-import { BTCTransaction, BTCTransactionRaw } from "../interfaces/btc";
+import { BTCTransaction, BTCTransactionRaw } from "../interfaces/BTC";
+import { ETHTransaction, EthereumTransactionRPC } from "../interfaces/Ethereum";
 
 
 interface HashComponentProps {
@@ -93,4 +94,45 @@ export function convertRawToBTCTransaction(raw: BTCTransactionRaw): BTCTransacti
     toggleItem: () => {},
     // Additional fields
   };
+}
+
+export function convertRawToEthereumTransaction(raw: EthereumTransactionRPC): ETHTransaction {
+  return {
+    hash: raw.result.hash,
+    src: raw.result.from,
+    dst: raw.result.to,
+    amount: raw.result.value,
+    time: Date.now(),
+    fee: raw.result.gasPrice,
+    blockNumber: raw.result.blockNumber,
+  }
+}
+
+export const detectBlockchain = (address: string): number => {
+  const addr = address.trim();
+
+  // Ethereum / BSC (EVM-based)
+  const evmRegex = /^0x[a-fA-F0-9]{40}$/;
+  if (evmRegex.test(addr)) {
+    return 0;
+  }
+
+  // Bitcoin Legacy (starts with 1 or 3)
+  const btcLegacyRegex = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
+  if (btcLegacyRegex.test(addr)) {
+    return 1;
+  }
+
+  // Bitcoin Bech32 (starts with bc1)
+  if (addr.toLowerCase().startsWith("bc1") && addr.length >= 39 && addr.length <= 59) {
+    return 1;
+  }
+
+  // Solana (Base58, 32-44 chars)
+  const solRegex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+  if (solRegex.test(addr)) {
+    return 4;
+  }
+
+  return -1;
 }

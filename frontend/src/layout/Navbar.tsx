@@ -3,26 +3,38 @@ import apiClient from "../api/client";
 import { useState, FormEvent, ChangeEvent, JSX } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
-interface ApiResponse {
-	status_code?: number;
-	data?: {
-		histories: string;
-		summary?: string;
-	};
-	statusText?: string;
-}
-
+import { detectBlockchain } from "../utils/transactions";
+import ConfirmAlert from "../components/common/ConfirmAlert";
 interface NavigationState {
-	results: any; // Replace 'any' with a proper interface for your results
+	network: number;
 	wallet: string;
-	summary?: any; // Replace 'any' with a proper interface for your summary
 }
 
 export default function Navbar(): JSX.Element {
 	const [search, setSearch] = useState<string>("");
-
+  const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false);
 	const navigate = useNavigate();
+
+  const handleConfirm = () => {
+    setShowConfirmAlert(false);
+    navigate("/eth-track", {
+      state: {
+        network: 2,
+        wallet: search,
+      } as NavigationState,
+    });
+  }
+
+
+  const handleCancel = () => {
+    setShowConfirmAlert(false);
+    navigate("/bnb-track", {
+      state: {
+        network: 3,
+        wallet: search,
+      } as NavigationState,
+    });
+  }
 
 	const handleSearch = async (e: FormEvent): Promise<void> => {
 		e.preventDefault();
@@ -33,56 +45,28 @@ export default function Navbar(): JSX.Element {
 			return;
 		}
 
-		try {
-			const response = await apiClient.get<ApiResponse>(
-				`/explore?wallet=${search}`
-			);
+    const network: number = detectBlockchain(search);
+    if (network === 0) {
+      setShowConfirmAlert(true)
+      return;
+    }
+    let target: string = ""
+    if (network == 1) {
+      target = "/btc-track"
+    }
+    else if (network == 4) {
+      target = "/sol-track"
+    }
 
-			if (response.status !== 200) {
-				throw new Error(response.statusText);
-			}
-
-			if (response.data?.status_code === 400) {
-				toast.warning("Please enter a valid wallet address");
-				return;
-			}
-
-			try {
-				const data = JSON.parse(response.data?.data?.histories || "");
-				const summary = response.data?.data?.summary
-					? JSON.parse(response.data.data.summary)
-					: undefined;
-
-				let target: string;
-				if (data.token === "BTC") {
-					target = "/btc-transactions";
-				} else if (data.token === "ETH") {
-					target = "/eth-transactions";
-				} else {
-					throw new Error("Unsupported token type");
-				}
-
-				navigate(target, {
-					state: {
-						results: data,
-						wallet: search,
-						summary,
-					} as NavigationState,
-				});
-			} catch (error) {
-				console.error(
-					"Exception raised while parsing response: ",
-					error
-				);
-				toast.error("Failed to parse the response data.");
-			}
-		} catch (err) {
-			console.error(err);
-			toast.error(
-				"Unexpected error! Please try again with valid wallet address."
-			);
-		}
+    navigate(target, {
+      state: {
+        wallet: search,
+        network
+      } as NavigationState
+    });    
 	};
+
+  
 
 	const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
 		setSearch(e.target.value);
@@ -120,6 +104,15 @@ export default function Navbar(): JSX.Element {
 					<span className="text-sm">Sign In</span>
 				</button>
 			</div>
+      {showConfirmAlert && (
+        <ConfirmAlert
+          message="Is this address Ethereum or BNB?"
+          confirmText="Ethereum"
+          cancelText="BNB"
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      )}
 		</nav>
 	);
 }

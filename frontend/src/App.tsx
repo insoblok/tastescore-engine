@@ -3,10 +3,12 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import BTCTransactions from "./pages/transactionHistories/BTCTransactions";
 import TransactionIndex from "./pages/transactionHistories/TransactionIndex";
 import ETHTransactions from "./pages/transactionHistories/ETHTransactions";
+import SolanaTransactions from "./pages/transactionHistories/SolanaTransactions";
 import { WebSocketManagerProvider } from "./context/WebSocketManagerContext";
 
 
 import { ToastContainer } from "react-toastify";
+import BNBTransactions from "./pages/transactionHistories/BNBTransactions";
 
 const router = createBrowserRouter([
 	{
@@ -14,13 +16,20 @@ const router = createBrowserRouter([
 		element: <TransactionIndex />,
 	},
 	{
-		path: "/btc-transactions",
+		path: "/btc-track",
 		element: <BTCTransactions />,
 	},
 	{
-		path: "/eth-transactions",
+		path: "/eth-track",
 		element: <ETHTransactions />,
 	},
+  {
+    path: "/bnb-track",
+    element: <BNBTransactions />
+  }, {
+    path: "/sol-track",
+    element: <SolanaTransactions />
+  }
 ]);
 
 function App() {
