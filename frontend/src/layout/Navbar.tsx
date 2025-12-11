@@ -97,7 +97,21 @@ export default function Navbar(): JSX.Element {
 					</form>
 				</div>
 			</div>
-			<div className="flex-1 flex justify-end">
+			<div className="flex-1 flex justify-end items-center gap-2">
+				{/* Protocol Checker Link */}
+				<button 
+					onClick={() => navigate("/protocol-checker")}
+					className="ml-4 flex items-center gap-1 bg-purple-600 text-white px-4 py-1.5 rounded-full hover:bg-purple-700 transition"
+				>
+					<span className="text-sm">Protocol Check</span>
+				</button>
+				{/* Sanctions Checker Link */}
+				<button 
+					onClick={() => navigate("/sanctions-checker")}
+					className="ml-4 flex items-center gap-1 bg-teal-600 text-white px-4 py-1.5 rounded-full hover:bg-teal-700 transition"
+				>
+					<span className="text-sm">Sanctions Check</span>
+				</button>
 				{/* Sign in */}
 				<button className="ml-4 flex items-center gap-1 bg-black text-white px-4 py-1.5 rounded-full hover:bg-gray-900 transition">
 					<User size={16} />

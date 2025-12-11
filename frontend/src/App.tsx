@@ -9,6 +9,8 @@ import { WebSocketManagerProvider } from "./context/WebSocketManagerContext";
 
 import { ToastContainer } from "react-toastify";
 import BNBTransactions from "./pages/transactionHistories/BNBTransactions";
+import SanctionsChecker from "./pages/sanctions/SanctionsChecker";
+import ProtocolChecker from "./pages/protocols/ProtocolChecker";
 
 const router = createBrowserRouter([
 	{
@@ -29,6 +31,14 @@ const router = createBrowserRouter([
   }, {
     path: "/sol-track",
     element: <SolanaTransactions />
+  },
+  {
+    path: "/sanctions-checker",
+    element: <SanctionsChecker />
+  },
+  {
+    path: "/protocol-checker",
+    element: <ProtocolChecker />
   }
 ]);
 
